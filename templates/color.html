@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SYNTEST – Color Test</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='color.css') }}?v=2">
+</head>
+<body class="page-color">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="brand">SYNTEST</div>
+    <div class="top-right">
+      <a class="about" href="#">About This Study</a>
+      <button class="account-btn">Your Account</button>
+    </div>
+  </div>
+
+  <!-- Gray band panel -->
+  <main class="panel">
+    <div class="content"><!-- keeps width identical to figma -->
+      <h1 class="prompt">
+        CHOOSE THE COLOR THAT IS ASSOCIATED WITH THE FOLLOWING LETTERS/<br>
+        NUMBERS
+      </h1>
+
+      <div class="home-wrap">
+        <a class="home-btn" href="{{ url_for('participants') }}">PRESENTATION</a>
+      </div>
+
+      <section class="work-area">
+        <!-- Color wheel -->
+        <div class="wheel-wrap">
+          <div class="color-wheel">
+            <span class="dot" aria-hidden="true"></span>
+          </div>
+        </div>
+
+        <!-- Selected color preview -->
+        <div class="swatch-wrap">
+          <div class="swatch">
+            <div class="hex">FF2E1E</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+</body>
+</html>
