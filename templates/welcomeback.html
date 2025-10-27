@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SYNTEST — Welcome back</title>
+  <link rel="stylesheet" href="./static/welcomeback.css" />
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">SYNTEST</div>
+
+    <nav class="nav">
+      <a href="#" class="nav-link">About This Study</a>
+      <button class="btn btn-dark">Your Account</button>
+    </nav>
+  </header>
+
+  <!-- Centered column (title + card) -->
+  <main class="wrap">
+    <div class="col">
+      <h1 class="page-title">Welcome back!</h1>
+
+      <form class="card" id="loginForm" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="Value" />
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Value" />
+        </div>
+
+        <button class="btn btn-dark btn-block" id="loginBtn" type="submit">Log In</button>
+      </form>
+    </div>
+  </main>
+
+  <!-- <script src="welcomeback.js"></script> -->
+</body>
+</html>

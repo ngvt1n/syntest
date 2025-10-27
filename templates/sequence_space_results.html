@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SYNTEST — Sequence-Space Results</title>
+  <link rel="stylesheet" href="./static/sequence_space_results.css" />
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">SYNTEST</div>
+
+    <nav class="nav">
+      <a href="#" class="nav-link">About This Study</a>
+      <button class="btn btn-dark">Your Account</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <h1 class="page-title">Your Results For Sequence-Space Synesthesia</h1>
+
+    <!-- Framed stage -->
+    <section class="stage" id="stage" aria-label="Results canvas">
+      <!-- full-size SVG for the triangle lines -->
+      <svg class="wires" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <line id="wire1" x1="0" y1="0" x2="0" y2="0" />
+        <line id="wire2" x1="0" y1="0" x2="0" y2="0" />
+        <line id="wire3" x1="0" y1="0" x2="0" y2="0" />
+      </svg>
+
+      <!-- Three points -->
+      <span class="dot dot-left"  data-key="A" aria-hidden="true"></span>
+      <span class="dot dot-right" data-key="B" aria-hidden="true"></span>
+      <span class="dot dot-bottom" data-key="C" aria-hidden="true"></span>
+    </section>
+  </main>
+
+  <!-- <script src="sequence_space_results.js"></script> -->
+</body>
+</html>

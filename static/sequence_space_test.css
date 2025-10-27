@@ -1,0 +1,130 @@
+/* Base reset (minimal to match the mock precisely) */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: #0e0e0e;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+               Helvetica, Arial, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.35;
+}
+
+/* Top bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28px 32px;
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  font-size: 28px;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #111111;
+  font-size: 16px;
+}
+
+.btn {
+  appearance: none;
+  border: 0;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: default;
+}
+
+.btn-dark {
+  background: #0f0f0f;
+  color: #ffffff;
+}
+
+/* Hero area */
+.hero {
+  width: min(1120px, 92vw);
+  margin: 10px auto 60px auto;
+  text-align: center;
+}
+
+.hero-title {
+  margin: 22px auto 10px auto;
+  max-width: 980px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  font-size: clamp(20px, 2.4vw + 12px, 30px);
+}
+
+/* Play button */
+.play {
+  margin: 12px auto 26px auto;
+  display: inline-flex;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Stage box */
+.stage {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  height: clamp(320px, 46vw, 520px);
+  border: 2px solid #1c1c1c;
+  border-radius: 2px;
+  background: #ffffff;
+}
+
+/* Dots inside the stage */
+.dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  background: #1e1e1e;
+  border-radius: 50%;
+}
+
+/* Positions chosen to visually match the reference */
+.dot-a { /* left-mid */
+  left: 24%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.dot-b { /* right-mid */
+  right: 19%;
+  top: 50%;
+  transform: translate(50%, -50%);
+}
+
+.dot-c { /* bottom-center */
+  left: 56%;
+  bottom: 9%;
+  transform: translate(-50%, 50%);
+}
+
+/* Small screens */
+@media (max-width: 640px) {
+  .topbar {
+    padding: 20px 18px;
+  }
+  .brand { font-size: 22px; }
+  .nav-link { display: none; } /* keeps the layout clean like the mock */
+}
