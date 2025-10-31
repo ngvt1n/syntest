@@ -105,3 +105,83 @@ class ColorTrial(db.Model):
             "meta_json": self.meta_json or {},
             "created_at": self.created_at.isoformat(),
         }
+        
+class TestData(db.Model):
+    """
+    Represents aggregated test-level data (e.g., Color Consistency Test results).
+    Each ColorStimulus can be linked to many TestData entries.
+    """
+    __tablename__ = "test_data"
+
+    # --- Keys and relationships ---
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(64), index=True, nullable=True)
+    test_id = db.Column(db.Integer, nullable=True, index=True)
+    owner_researcher_id = db.Column(db.Integer, nullable=True, index=True)
+    session_id = db.Column(db.Integer, nullable=True, index=True)
+
+    # Link to color stimulus (one-to-many from ColorStimulus)
+    stimulus_id = db.Column(
+        db.Integer,
+        db.ForeignKey("color_stimuli.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    stimulus = db.relationship("ColorStimulus", backref="test_data")
+
+    # --- Descriptive fields ---
+    test_type = db.Column(db.String(64), nullable=True)  # e.g., "CCT", "SCT"
+    stimulus_type = db.Column(db.String(64), nullable=True)
+    family = db.Column(db.String(16), nullable=False, default="color")  # 'color', 'gustatory', 'space'
+    locale = db.Column(db.String(16), nullable=True)
+
+    # --- Core test metadata ---
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    trial = db.Column(db.Integer, nullable=True)
+    cct_cutoff = db.Column(db.Float, nullable=True)
+    cct_triggers = db.Column(db.Integer, nullable=True)
+    cct_trials_per_trigger = db.Column(db.Integer, nullable=True)
+    cct_valid = db.Column(db.Integer, nullable=True)
+
+    # --- Consistency metrics ---
+    cct_none_pct = db.Column(db.Float, nullable=True)
+    cct_rt_mean = db.Column(db.Integer, nullable=True)
+    cct_mean = db.Column(db.Float, nullable=True)
+    cct_std = db.Column(db.Float, nullable=True)
+    cct_median = db.Column(db.Float, nullable=True)
+
+    # --- Complex data ---
+    cct_per_trigger = db.Column(db.JSON, nullable=True)
+    cct_pairwise = db.Column(db.JSON, nullable=True)
+
+    # --- Results summary ---
+    cct_pass = db.Column(db.Boolean, nullable=True)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "test_id": self.test_id,
+            "owner_researcher_id": self.owner_researcher_id,
+            "session_id": self.session_id,
+            "stimulus_id": self.stimulus_id,
+            "test_type": self.test_type,
+            "stimulus_type": self.stimulus_type,
+            "family": self.family,
+            "locale": self.locale,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "trial": self.trial,
+            "cct_cutoff": self.cct_cutoff,
+            "cct_triggers": self.cct_triggers,
+            "cct_trials_per_trigger": self.cct_trials_per_trigger,
+            "cct_valid": self.cct_valid,
+            "cct_none_pct": self.cct_none_pct,
+            "cct_rt_mean": self.cct_rt_mean,
+            "cct_mean": self.cct_mean,
+            "cct_std": self.cct_std,
+            "cct_median": self.cct_median,
+            "cct_per_trigger": self.cct_per_trigger,
+            "cct_pairwise": self.cct_pairwise,
+            "cct_pass": self.cct_pass,
+        }
+
