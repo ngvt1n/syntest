@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SYNTEST – Color Association</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='association.css') }}?v=7">
+</head>
+<body class="page-association">
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="brand">SYNTEST</div>
+    <div class="top-right">
+      <a class="about" href="#">About This Study</a>
+      <button class="account-btn">Your Account</button>
+    </div>
+  </div>
+
+  <!-- Gray band panel -->
+  <main class="panel">
+    <div class="content">
+      <header class="hero">
+        <h1 class="prompt">WHAT COLOR DO YOU ASSOCIATE WITH THE WORD</h1>
+        <a class="cta" href="{{ url_for('participants') }}">PRESENTATION</a>
+        <div class="clock" aria-hidden="true"></div>
+      </header>
+
+      <!-- 4 tiles in a single row, centered -->
+      <section class="choices">
+        <button class="tile" style="--c:#E64234" aria-label="red"></button>
+        <button class="tile" style="--c:#E8854C" aria-label="orange"></button>
+        <button class="tile" style="--c:#4C70F2" aria-label="blue"></button>
+        <button class="tile" style="--c:#9B49EA" aria-label="purple"></button>
+      </section>
+    </div>
+  </main>
+
+</body>
+</html>

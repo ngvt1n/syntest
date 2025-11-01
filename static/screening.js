@@ -260,3 +260,20 @@
     }
   });
 })();
+
+// static/screening.js
+// Minimal placeholder to avoid missing-script errors; expand as needed.
+
+document.addEventListener("DOMContentLoaded", () => {
+  const stepEl = document.querySelector("[data-screening-step]");
+  if (stepEl) {
+    // Example: update progress bar width if present
+    const fill = document.querySelector(".progress-fill");
+    const step = Number(stepEl.getAttribute("data-screening-step")) || 0;
+    const max = Number(stepEl.getAttribute("data-screening-max")) || 5;
+    if (fill && max > 0) {
+      fill.style.width = `${Math.round((step / max) * 100)}%`;
+    }
+  }
+});
+

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SYNTEST — Sequence Space Test</title>
+  <link rel="stylesheet" href="./static/sequence_space_test.css" />
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="brand">SYNTEST</div>
+
+    <nav class="nav">
+      <a href="#" class="nav-link">About This Study</a>
+      <button class="btn btn-dark">Your Account</button>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <main class="hero">
+    <h2 class="hero-title">
+      LOREM IPSUM DOLOR SIT AMET, CONSECTETUR ADIPISCING ELIT, SED DO EIUSMOD
+      TEMPOR INCIDIDUNT UT LABORE ET DOLORE MAGNA ALIQUA.
+    </h2>
+
+    <!-- Play button -->
+    <button class="play" aria-label="Play video">
+      <!-- SVG: black roundel with white triangle -->
+      <svg viewBox="0 0 72 72" width="56" height="56" aria-hidden="true">
+        <circle cx="36" cy="36" r="28" fill="#111111" />
+        <polygon points="30,24 30,48 50,36" fill="#ffffff" />
+        <!-- subtle outer ring to match the mock -->
+        <circle cx="36" cy="36" r="31.5" fill="none" stroke="#111111" stroke-width="3" />
+      </svg>
+    </button>
+
+    <!-- Framed stage with three dots -->
+    <section class="stage" role="img" aria-label="Framed canvas with three points">
+      <span class="dot dot-a" aria-hidden="true"></span>
+      <span class="dot dot-b" aria-hidden="true"></span>
+      <span class="dot dot-c" aria-hidden="true"></span>
+    </section>
+  </main>
+
+  <!-- <script src="sequence_space_test.js"></script> -->
+</body>
+</html>
