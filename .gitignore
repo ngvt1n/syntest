@@ -1,0 +1,19 @@
+# Python & OS
+__pycache__/
+*.py[cod]
+*.egg-info/
+.DS_Store
+Thumbs.db
+
+# Envs & secrets
+.venv/
+.env
+.env.*
+
+# Editor
+.vscode/
+.idea/
+
+# Flask/Build artifacts
+instance/
+*.log
