@@ -1,7 +1,7 @@
 # ======================================
 # OS & Editor Files
 # ======================================
-# macOS
+# macOS / Windows
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -12,7 +12,7 @@ Icon?
 ehthumbs.db
 Thumbs.db
 
-# VSCode
+# Editors / IDE
 .vscode/
 .idea/
 
@@ -26,6 +26,8 @@ __pycache__/
 *.pyd
 *.pdb
 *.pkl
+*.egg-info/
+.eggs/
 
 # Virtual Environments
 .venv/
@@ -34,13 +36,17 @@ env/
 ENV/
 env.bak/
 
+# Env & secrets
+.env
+.env.*
+
 # Flask / SQLAlchemy
 instance/
 *.db
 *.sqlite
 *.sqlite3
 
-# Migrations
+# Migrations (remove if you want to track Alembic)
 migrations/
 alembic/
 
@@ -49,11 +55,9 @@ alembic/
 *.out
 *.err
 
-# Bytecode and cache
+# Bytecode/cache
 *.pyc
 __pycache__/
-*.egg-info/
-.eggs/
 
 # ======================================
 # Node / Frontend (if used)
@@ -73,8 +77,9 @@ yarn-error.log*
 *.temp
 *.lock
 
-# Local Testing
+# Local Testing / Coverage
 *.coverage
+.coverage
 .coverage.*
 htmlcov/
 .cache/
