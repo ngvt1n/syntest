@@ -9,24 +9,6 @@
 //     - getTitle(): string         -> display name for the results box
 //
 //
-// Usage (from a page):
-//   import { BaseColorTest } from "./base_color_test.js";
-//   class LetterTest extends BaseColorTest {
-//     getStimuliSet() { return ["A","B","C"]; }
-//     getTitle()      { return "LETTER COLOR TEST"; }
-//   }
-//   new LetterTest(uiRefs, { trialsPerLabel: 3, wheelSize: 360 });
-//
-// Required UI refs (any missing element is safely ignored):
-//   {
-//     wheel, dot, swatch, hex,
-//     stimulusContent, stimulusLabel,
-//     trialNum, trialTotal, progress,
-//     btnNext, btnNone, trialSlider,
-//     cctSummary, helpBtn, helpDialog, helpClose
-//   }
-// ============================================================
-
 import { WheelRenderer, shuffle } from "./color_shared.js";
 
 /** @typedef {Object} UIRefs

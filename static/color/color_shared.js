@@ -1,28 +1,48 @@
 // ============================================================
 // SYNTEST — Shared Utilities + WheelRenderer
 // ------------------------------------------------------------
-// What this file does:
-//   1) Small, pure helpers: clamp, rgbToHex, shuffle
-//   2) WheelRenderer: draws an HSL-based color wheel and reports
-//      picked colors via an onSelect(r,g,b,hex) callback.
+// Purpose (SOLID):
+// - This module has a single responsibility: provide small pure helpers
+//   and a minimal WheelRenderer that draws an HSL wheel, samples colors,
+//   and notifies the page via a callback. No business logic, timers,
+//   or persistence live here.
+// - Open for extension / closed for modification: pages can wrap or
+//   compose WheelRenderer behavior externally without editing this file.
+// - Liskov, Interface Segregation, Dependency Inversion: the renderer
+//   depends only on a standard <canvas> and a tiny callback interface;
+//   the page decides what to do with selections (e.g., enable buttons,
+//   save trials).
 //
-// Notes:
-//   - DPR-correct rendering/sampling ensures the picked color matches
-//     what the user sees on HiDPI screens.
-//   - All listeners are cleaned up in destroy() to prevent leaks.
 // ============================================================
 
-/** Clamp a value to [min, max]. Pure. */
+/**
+ * Clamp a number into a closed interval.
+ * @param {number} v - value
+ * @param {number} min - lower bound
+ * @param {number} max - upper bound
+ * @returns {number}
+ */
 export const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
 
-/** Convert RGB(0..255) to #RRGGBB. Pure. */
+/**
+ * Convert RGB components (0..255) to an uppercase hex string "RRGGBB".
+ * Pure utility with no side effects.
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {string}
+ */
 export const rgbToHex = (r, g, b) =>
-  [r, g, b]
-    .map(n => clamp(n, 0, 255).toString(16).padStart(2, "0"))
-    .join("")
-    .toUpperCase();
+  [r, g, b].map(n => clamp(n, 0, 255).toString(16).padStart(2, "0"))
+           .join("")
+           .toUpperCase();
 
-/** Fisher–Yates shuffle. Mutates and returns the same array. Pure. */
+/**
+ * In-place Fisher–Yates shuffle. Returns the same array for convenience.
+ * @template T
+ * @param {T[]} arr
+ * @returns {T[]}
+ */
 export const shuffle = arr => {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -31,77 +51,65 @@ export const shuffle = arr => {
   return arr;
 };
 
-/** Default visual + behavior options for the wheel. */
-const defaultWheelOpts = Object.freeze({
-  outlineColor: "#000",
-  outlineWidth: 2,
-  freezeBorderColor: "#f00",  // dot border when frozen
-  liveBorderColor: "#000",    // dot border when movable
-  saturation: 1.0,            // fixed S in HSL -> RGB
-  // The dot is a positioned element the page provides (for accessibility/visibility)
-  dotRadius: 7                // used only to position the dot aesthetically
-});
-
 /**
  * WheelRenderer
- * Draws an HSL wheel (H on X, L on Y, constant S) and lets the user pick colors.
- * Emits the selection via `onSelect({ r, g, b, hex })`.
+ * ------------------------------------------------------------
+ * Minimal canvas-based color picker that:
+ *  - draws an HSL wheel (H on X, L on Y, fixed S),
+ *  - samples a color at a pointer position,
+ *  - shows a movable "dot" marker,
+ *  - toggles a "frozen" (locked) state on click (dot border turns red),
+ *  - calls `onSelect({r,g,b,hex})` on drag/move selections and after unfreeze.
  *
- * @param {HTMLCanvasElement} canvas  The visible canvas to draw into
- * @param {HTMLElement}       dot     Absolutely-positioned marker shown at pick point
- * @param {(sel: {r:number,g:number,b:number,hex:string})=>void} onSelect  Callback for selections
- * @param {Partial<typeof defaultWheelOpts>} [opts]  Optional visual behavior overrides
+ * The renderer does not manage higher-level UI (buttons, progress, etc.).
+ * The host page wires `onSelect` to its own logic.
  */
 export class WheelRenderer {
-  constructor(canvas, dot, onSelect, opts = {}) {
-    // ---- Save collaborators
+  /**
+   * @param {HTMLCanvasElement} canvas - target canvas (square) already sized
+   * @param {HTMLElement} dot - absolutely-positioned marker element
+   * @param {(sel:{r:number,g:number,b:number,hex:string})=>void} onSelect - selection callback
+   */
+  constructor(canvas, dot, onSelect) {
+    /** @type {HTMLCanvasElement} */
     this.canvas = canvas;
+    /** @type {CanvasRenderingContext2D} */
     this.ctx = canvas.getContext("2d", { willReadFrequently: true });
+    /** @type {HTMLElement} */
     this.dot = dot;
+    /** @type {function} */
     this.onSelect = onSelect;
-    this.opts = { ...defaultWheelOpts, ...opts };
 
-    // ---- State
+    // Logical drawing size (CSS pixels) equals the canvas width attribute.
+    // (HiDPI scaling is intentionally unchanged to preserve existing behavior.)
+    this.size = canvas.width;
+
+    // Pointer & lock state
     this.isDragging = false;
     this.isFrozen = false;
 
-    // ---- Backing store sizing to honor devicePixelRatio (DPR)
-    // So what you see equals what we sample.
-    this._setupDPR();
-
-    // ---- Draw once and wire the events
+    // Render once and bind events
     this._draw();
     this._drawOutline();
     this._wireEvents();
   }
 
-  // ===========================
-  // Canvas setup & drawing
-  // ===========================
-  _setupDPR() {
-    const dpr = window.devicePixelRatio || 1;
-    // CSS pixels
-    const cssSize = this.canvas.width; // author sets width=height in HTML/JS
-    // Backing pixels
-    this.canvas.width = Math.floor(cssSize * dpr);
-    this.canvas.height = Math.floor(cssSize * dpr);
-    // Scale context so drawing math can still use CSS pixels
-    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    this.size = cssSize; // logical drawing size in CSS pixels
-  }
-
+  /**
+   * Draw the HSL wheel (H on X, L on Y, S fixed at 1.0).
+   * No side effects beyond the canvas pixels.
+   * @private
+   */
   _draw() {
     const { ctx, size } = this;
     const img = ctx.createImageData(size, size);
     const data = img.data;
 
-    // HSL plane: H = x/size * 360, L = 1 - y/size, S = fixed
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         const idx = (y * size + x) * 4;
-        const h = (x / size) * 360;
-        const l = 1 - y / size;
-        const s = this.opts.saturation;
+        const h = (x / size) * 360; // hue axis
+        const l = 1 - y / size;     // lightness axis
+        const s = 1.0;              // saturation fixed
         const [r, g, b] = this._hslToRgb(h, s, l);
         data[idx]     = r;
         data[idx + 1] = g;
@@ -112,15 +120,25 @@ export class WheelRenderer {
     ctx.putImageData(img, 0, 0);
   }
 
+  /**
+   * Draw a crisp 1px border around the wheel.
+   * @private
+   */
   _drawOutline() {
     const { ctx, size } = this;
-    ctx.lineWidth = this.opts.outlineWidth;
-    ctx.strokeStyle = this.opts.outlineColor;
-    // 0.5 offset keeps the hairline crisp
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#000";
     ctx.strokeRect(0.5, 0.5, size - 1, size - 1);
   }
 
-  /** HSL(0..360, 0..1, 0..1) -> RGB(0..255). Pure. */
+  /**
+   * Convert HSL to RGB (0..255 each). Pure function.
+   * @param {number} h - 0..360
+   * @param {number} s - 0..1
+   * @param {number} l - 0..1
+   * @returns {[number,number,number]}
+   * @private
+   */
   _hslToRgb(h, s, l) {
     const c = (1 - Math.abs(2 * l - 1)) * s;
     const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
@@ -141,93 +159,70 @@ export class WheelRenderer {
     ];
   }
 
-  // ===========================
-  // Events & interaction
-  // ===========================
+  /**
+   * Bind mouse events for drag-to-preview and click-to-freeze/unfreeze.
+   * Behavior is intentionally unchanged.
+   * @private
+   */
   _wireEvents() {
-    // Save bound handlers so we can remove them in destroy()
-    this._onMouseDown = (e) => {
+    // Start dragging and emit a selection under the pointer.
+    this.canvas.addEventListener("mousedown", e => {
       if (this.isFrozen) return;
       this.isDragging = true;
       const s = this._sampleAtEvent(e);
       if (s) this.onSelect?.(s);
-    };
+    });
 
-    this._onMouseMove = (e) => {
+    // While dragging, keep emitting selections.
+    this.canvas.addEventListener("mousemove", e => {
       if (!this.isDragging || this.isFrozen) return;
       const s = this._sampleAtEvent(e);
       if (s) this.onSelect?.(s);
-    };
+    });
 
-    this._onMouseUp = () => { this.isDragging = false; };
+    // Stop dragging when mouse is released anywhere.
+    window.addEventListener("mouseup", () => { this.isDragging = false; });
 
-    this._onClick = (e) => {
+    // Click toggles freeze:
+    //  - On first click, lock and turn dot border red (no new selection emitted).
+    //  - On next click, unlock (turn border black) and emit a selection at click.
+    this.canvas.addEventListener("click", e => {
       const s = this._sampleAtEvent(e);
       if (!s) return;
 
-      // Toggle freeze; when frozen, dot border shows "locked" state
-      this.isFrozen = !this.isFrozen;
-      if (this.dot) {
-        this.dot.style.borderColor = this.isFrozen
-          ? this.opts.freezeBorderColor
-          : this.opts.liveBorderColor;
-      }
       if (!this.isFrozen) {
-        // When unfreezing via click, also re-emit selection so UI is in sync
-        this.onSelect?.(s);
+        this.isFrozen = true;
+        this.isDragging = false;
+        this.dot.style.borderColor = "#f00"; // frozen indicator (red)
+      } else {
+        this.isFrozen = false;
+        this.dot.style.borderColor = "#000"; // live indicator (black)
+        this.onSelect?.(s);                  // re-emit after unfreezing
       }
-    };
-
-    this.canvas.addEventListener("mousedown", this._onMouseDown);
-    this.canvas.addEventListener("mousemove", this._onMouseMove);
-    window.addEventListener("mouseup", this._onMouseUp);
-    this.canvas.addEventListener("click", this._onClick);
+    });
   }
 
   /**
-   * Convert a mouse event to canvas coords, sample the pixel, move the dot,
-   * and return the selected color.
+   * Sample the color at a mouse event, position the dot, and return RGB+hex.
+   * Returns null if outside canvas bounds. No state is mutated aside from
+   * dot visibility/position (view concern).
+   * @param {MouseEvent} e
+   * @returns {{r:number,g:number,b:number,hex:string}|null}
+   * @private
    */
   _sampleAtEvent(e) {
     const rect = this.canvas.getBoundingClientRect();
     const x = Math.floor(e.clientX - rect.left);
     const y = Math.floor(e.clientY - rect.top);
-
     if (x < 0 || x >= this.size || y < 0 || y >= this.size) return null;
 
-    // Read from the *display* canvas (DPR already handled by setTransform)
     const p = this.ctx.getImageData(x, y, 1, 1).data;
 
-    if (this.dot) {
-      this.dot.style.display = "block";
-      // Slight offset so the dot is centered on the cursor
-      const r = this.opts.dotRadius;
-      this.dot.style.left = `${x - r}px`;
-      this.dot.style.top  = `${y - r}px`;
-    }
+    // Update marker position/visibility (presentation only).
+    this.dot.style.display = "block";
+    this.dot.style.left = `${x - 7}px`;
+    this.dot.style.top  = `${y - 7}px`;
 
     return { r: p[0], g: p[1], b: p[2], hex: rgbToHex(p[0], p[1], p[2]) };
-  }
-
-  // ===========================
-  // Lifecycle helpers
-  // ===========================
-
-  /** Public: programmatically freeze/unfreeze the wheel. */
-  setFrozen(frozen) {
-    this.isFrozen = !!frozen;
-    if (this.dot) {
-      this.dot.style.borderColor = this.isFrozen
-        ? this.opts.freezeBorderColor
-        : this.opts.liveBorderColor;
-    }
-  }
-
-  /** Public: remove listeners if you tear down the UI. */
-  destroy() {
-    this.canvas.removeEventListener("mousedown", this._onMouseDown);
-    this.canvas.removeEventListener("mousemove", this._onMouseMove);
-    window.removeEventListener("mouseup", this._onMouseUp);
-    this.canvas.removeEventListener("click", this._onClick);
   }
 }

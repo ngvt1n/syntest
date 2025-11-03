@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="{{ url_for('static', filename='color.css') }}?v=12" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='color.css') }}?v=13" />
 </head>
 
 <body class="page-color">
@@ -29,7 +29,11 @@
     <div class="content">
       <header class="hdr">
         <h1>NUMBER COLOR TEST: CONSISTENCY &amp; SPEED</h1>
-        <p class="sub">You’ll assign colors to <b>numbers</b>. Each item repeats <b>3×</b>. Use a laptop/desktop; turn off blue-light filters.</p>
+        <p class="lede">
+          You’ll assign a color to each <b>number</b>. <b>Click and hold</b> the mouse on the wheel and <b>drag</b> to preview and adjust a color.
+          To record a choice, <b>click to lock</b> it — the small circle turns <b>red</b> when locked — and click again to unlock if you need to change it.
+          Press <b>Next</b> to save each choice. For best results, use a laptop/desktop and turn off blue-light filters.
+        </p>
       </header>
 
       <section class="block" aria-labelledby="cct-heading">
@@ -42,6 +46,18 @@
         </div>
 
         <div id="cctContainer" class="cct-grid">
+          <!-- LEFT: concise how-to -->
+          <aside class="howto" aria-label="How to complete the test">
+            <h4>How to complete the test</h4>
+            <ol>
+              <li>Read the number on the right.</li>
+              <li><b>Click and hold</b> on the wheel, then <b>drag</b> to preview and adjust.</li>
+              <li>Release or single-click to <b>lock</b> the color — the small circle turns <b>red</b> when locked. Click again to unlock.</li>
+              <li>Press <b>Next</b> to save.</li>
+            </ol>
+          </aside>
+
+          <!-- MIDDLE: color wheel + caption -->
           <div class="wheel-wrap">
             <div style="position: relative">
               <canvas
@@ -49,27 +65,26 @@
                 width="360"
                 height="360"
                 aria-label="Color selection area"
-                aria-describedby="wheelTip"
               ></canvas>
               <span class="dot" id="dot" aria-hidden="true"></span>
             </div>
-            <div class="wheel-actions">
-              <button id="btnNone" class="btn" type="button">No color</button>
+            <p class="caption">Click and hold, then drag to adjust. Click to <b>lock</b> (circle turns <b>red</b>); click again to unlock.</p>
+          </div>
+
+          <!-- RIGHT: stimulus + preview + next -->
+          <div class="swatch-wrap" aria-live="polite">
+            <div id="stimulusBox" class="stimulus-box" aria-label="Stimulus">
+              <div id="stimulusContent">—</div>
             </div>
-          </div>
+            <p class="caption" aria-hidden="true">This is the current number to color-match.</p>
 
-          <div id="stimulusBox" class="stimulus-box" aria-label="Stimulus">
-            <div id="stimulusContent">—</div>
-          </div>
-
-          <div class="swatch-wrap">
-            <div class="swatch" id="swatch" aria-label="Selected color preview">
+            <div class="swatch" id="swatch" aria-label="Selected color preview" style="margin-top:12px;">
               <div class="hex" id="hex">———</div>
             </div>
+
             <div class="nav">
               <button id="btnNext" class="btn btn-primary" type="button" disabled>Next →</button>
             </div>
-            <p class="tip" id="wheelTip">Move over the wheel to select. Press <b>N</b> to toggle “No color”.</p>
           </div>
         </div>
 
@@ -83,13 +98,14 @@
     </div>
   </main>
 
+  <!-- Help dialog -->
   <dialog id="helpDialog" class="help" aria-labelledby="helpTitle">
     <h3 id="helpTitle">Quick Help</h3>
     <ul>
-      <li>Look at the number in the middle.</li>
-      <li>Pick the color that best matches your automatic experience.</li>
-      <li>Use “No color” if you have none for that item.</li>
-      <li>Each number repeats 3× in random order.</li>
+      <li>Read the number on the right.</li>
+      <li><b>Click and hold</b> on the wheel, then <b>drag</b> to adjust.</li>
+      <li>Click to <b>lock</b> your choice — the small circle turns <b>red</b>. Click again to unlock.</li>
+      <li>Press <b>Next</b> to save each choice.</li>
     </ul>
     <div class="dlg-actions">
       <button id="helpClose" class="btn btn-primary" type="button">OK</button>
@@ -111,7 +127,7 @@
       trialTotal: $('trialTotal'),
       progress: $('progress'),
       btnNext: $('btnNext'),
-      btnNone: $('btnNone'),
+      // btnNone intentionally omitted; “No color” disabled
       trialSlider: $('trialSlider'),
       cctSummary: $('cctSummary'),
       helpBtn: $('helpBtn'),
@@ -119,7 +135,7 @@
       helpClose: $('helpClose'),
     };
 
-    new NumberColorTest(ui, { trialsPerLabel: 3, wheelSize: 360, cutoffDistance: 135 });
+    new NumberColorTest(ui, { trialsPerLabel: 3, wheelSize: 360, cutoffDistance: 135, allowNoColor: false });
   </script>
 </body>
 </html>
