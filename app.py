@@ -18,7 +18,7 @@ from models import (
 # Screening API blueprint (expects views/api_screening.py to expose `bp`)
 # Adjust the import path if your layout differs.
 # -----------------------------
-from views import api_screening as screening_api
+import views as screening_api
 
 app = Flask(__name__)
 
