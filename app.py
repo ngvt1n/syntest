@@ -152,7 +152,7 @@ def participant_dashboard():
     recommended_tests = Test.query.all()
 
     return render_template(
-        'participant_dashboard.html',
+        'dashboard.html',
         user=user,
         tests_completed=len(completed_tests),
         tests_pending=len(all_tests) - len(completed_tests),
