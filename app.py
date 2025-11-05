@@ -434,6 +434,8 @@ def speed_congruency_submit():
 # SPECIFIC COLOR TEST ROUTES (UI)
 # =====================================
 
+# TODO: rename these functions cause order of trigger-measured thing is confusing
+
 @app.route('/color/number')
 def number_color_test():
     """Number–Color Synesthesia Test"""
