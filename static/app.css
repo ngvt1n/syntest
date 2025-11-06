@@ -152,6 +152,7 @@ body {
 
 .nav-link {
   text-decoration: none;
+  background-color: var(--bg-primary);
   color: var(--text-primary);
   font-size: var(--font-size-base);
   font-weight: 500;
@@ -188,7 +189,7 @@ body {
   gap: var(--spacing-md);
   text-decoration: none;
   color: var(--text-primary);
-  padding: 10px 12px;
+  padding: var(--spacing-md) var(--spacing-sm);
   border-radius: var(--radius-lg);
   font-weight: 500;
   transition: background var(--transition-base);
@@ -460,6 +461,7 @@ p {
   padding: var(--spacing-2xl);
   margin-bottom: var(--spacing-xl);
   box-shadow: var(--shadow-sm);
+  flex-grow: 1;
 }
 
 .card-sm {
@@ -815,6 +817,10 @@ textarea:disabled {
 
 .flex-col {
   flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
 }
 
 .flex-center {
