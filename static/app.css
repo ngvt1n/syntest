@@ -135,6 +135,7 @@ body {
 
 /* Brand/Logo */
 .brand {
+  display: block;
   font-weight: 800;
   font-size: var(--font-size-2xl);
   letter-spacing: 0.02em;
