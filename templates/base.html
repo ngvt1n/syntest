@@ -62,9 +62,5 @@
   </footer>
   {% endblock %}
 
-  {% block extra_js %}
-    {# Include screening UI logic if present on repo #}
-    <script src="{{ url_for('static', filename='screening.js') }}" defer></script>
-  {% endblock %}
 </body>
 </html>
