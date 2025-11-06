@@ -13,7 +13,7 @@
     
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 20% 1fr;
+      grid-template-columns: 200px 1fr;
       min-height: 100vh;
       background: var(--bg-secondary);
     }
@@ -22,6 +22,13 @@
       background: var(--bg-primary);
       border-right: 1px solid var(--border-primary);
       padding: var(--spacing-3xl) var(--spacing-lg) var(--spacing-xl) var(--spacing-2xl);
+    }
+
+    .dashboard-row {
+      display: flex; 
+      flex-direction: row;
+      gap: var(--spacing-sm); 
+      flex-wrap: wrap;
     }
 
     .section {
@@ -85,8 +92,6 @@
     }
 
     .mini-chart {
-      width: 260px;
-      height: 96px;
       border-radius: var(--radius-xl);
       position: relative;
       overflow: hidden;
@@ -125,8 +130,8 @@
 
     /* Responsive */
     @media (max-width: 1200px) {
-      .detail-row {
-        grid-template-columns: 1fr 1fr;
+      .dashboard-row {
+        flex-direction: column;
       }
     }
 
@@ -139,14 +144,6 @@
         border-right: none;
         border-bottom: 1px solid var(--border-primary);
       }
-
-      .detail-row {
-        grid-template-columns: 1fr;
-      }
-
-      .performance-row {
-        flex-wrap: wrap;
-      }
     }
   </style>
 </head>
@@ -156,7 +153,7 @@
 
     <!-- ===== Sidebar ===== -->
     <aside class="dashboard-sidebar">
-      <div class="brand" style="margin-left: var(--spacing-sm); margin-bottom: var(--spacing-lg);">SYNTEST</div>
+      <a href="/" class="brand" style="margin-left: var(--spacing-sm); margin-bottom: var(--spacing-lg);">SYNTEST</a>
 
       <nav class="side-nav">
         <!-- Pre-Screening -->
@@ -196,7 +193,7 @@
       <section class="section">
         <h2 class="section-title">PARTICIPANT DETAIL</h2>
 
-        <div class="flex flex-gap-sm flex-row">
+        <div class="dashboard-row">
           <!-- Participant card -->
           <article class="card">
             <div class="avatar" aria-hidden="true">👩🏼‍🦰</div>
@@ -237,9 +234,9 @@
 
       <section class="section">
         <h2 class="section-title">RESEARCHER'S NOTES</h2>
-        <div class="card note-card">
-          <p class="note-text">Edge case!</p>
-        </div>
+        <!-- <div class="card note-card"> -->
+        <!--   <p class="note-text">Edge case!</p> -->
+        <!-- </div> -->
 
         <div class="actions">
           <button class="btn btn-ghost">Export</button>
