@@ -28,6 +28,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this-in-production'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///syntest.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SCREENING_SECURITY_TOKEN'] = 'syntest-preview'
 
 # Initialize database
 db.init_app(app)
@@ -195,6 +196,14 @@ def association():
 def flow(step):
     step = max(0, min(step, 5))  # adjust the upper bound as you add steps
     return render_template('screen_flow.html', step=step)
+
+
+@app.route('/screening/security')
+def screening_security_console():
+    token = request.args.get('dev')
+    if token != app.config['SCREENING_SECURITY_TOKEN']:
+        abort(404)
+    return render_template('security_console.html')
 
 EXIT_CONTENT = {
     "A": {
