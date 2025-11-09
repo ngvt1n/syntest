@@ -21,22 +21,17 @@ export class ColorIntro {
   show({ title, description, instructions = [], onStart, estimatedTime }) {
     this.hide();
 
-    this.introElement = document.createElement('div');
-    this.introElement.className = 'color-intro-container';
-    
-    this.introElement.innerHTML = `
-      <div class="color-intro-content">
-        <h2 class="color-intro-title">${title}</h2>
-        <p class="color-intro-description">${description}</p>
-        ${instructions.length ? this._renderInstructions(instructions) : ''}
-        ${estimatedTime ? `<p class="color-intro-time">⏱️ Estimated time: ${estimatedTime}</p>` : ''}
-        <button class="color-intro-start-btn">Start Test</button>
+    this.container.innerHTML = `
+      <h2 class="card-title" id="helpTitle">${title}</h2>
+      <p class="card-body">${description}</p>
+      ${instructions.length ? this._renderInstructions(instructions) : ''}
+      ${estimatedTime ? `<p class="caption">⏱️ Estimated time: ${estimatedTime}</p>` : ''}
+      <div class="actions actions-center">
+        <button class="btn btn-primary" id="startButton">Start Test</button>
       </div>
     `;
 
-    this.container.appendChild(this.introElement);
-
-    const startBtn = this.introElement.querySelector('.color-intro-start-btn');
+    const startBtn = this.introElement.querySelector('#startButton');
     startBtn.addEventListener('click', () => {
       this.hide();
       onStart();
@@ -45,7 +40,7 @@ export class ColorIntro {
 
   _renderInstructions(instructions) {
     return `
-      <ul class="color-intro-instructions">
+      <ul>
         ${instructions.map(item => `<li>${item}</li>`).join('')}
       </ul>
     `;
