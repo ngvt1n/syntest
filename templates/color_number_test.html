@@ -100,18 +100,8 @@
   </main>
 
   <!-- Help dialog -->
-  <dialog id="helpDialog" class="help" aria-labelledby="helpTitle">
-    <h3 id="helpTitle">Quick Help</h3>
-    <ul>
-      <li>Read the number on the right.</li>
-      <li><b>Click and hold</b> on the wheel, then <b>drag</b> to adjust.</li>
-      <li>Click to <b>lock</b> your choice — the small circle turns <b>red</b>. Click again to unlock.</li>
-      <li>Press <b>Next</b> to save each choice.</li>
-    </ul>
-    <div class="dlg-actions">
-      <button id="helpClose" class="btn btn-primary" type="button">OK</button>
-    </div>
-  </dialog>
+  <div id="helpDialog" class="card help" aria-labelledby="helpTitle">
+  </div>
 
   <script type="module">
     import { NumberColorTest } from "{{ url_for('static', filename='color/number_color_test.js') }}";

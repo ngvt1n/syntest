@@ -124,7 +124,7 @@ export class BaseColorTest {
     this.rendererFactory = deps.rendererFactory || ((c, d, cb) => new WheelRenderer(c, d, cb));
 
     // ---- Intro system
-    this.intro = new ColorIntro(this.ui.stimulusContent);
+    this.intro = new ColorIntro(this.ui.helpDialog);
     this.testStarted = false;
 
     // ---- State we maintain
