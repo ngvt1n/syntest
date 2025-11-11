@@ -19,12 +19,11 @@ import './styles/app.css'
 function App() {
   return (
     <AuthProvider>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          
           <Route
             path="/participant/dashboard"
             element={
@@ -33,54 +32,54 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/researcher/dashboard"
-            element={
-              <ProtectedRoute role="researcher">
-                <ResearcherDashboard />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route path="/screening/:step" element={<ScreeningFlow />} />
-          <Route path="/screening/exit/:code" element={<ScreeningExit />} />
-          
-          <Route
-            path="/color/number"
-            element={
-              <ProtectedRoute role="participant">
-                <ColorNumberTest />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/color/letter"
-            element={
-              <ProtectedRoute role="participant">
-                <ColorLetterTest />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/color/word"
-            element={
-              <ProtectedRoute role="participant">
-                <ColorWordTest />
-              </ProtectedRoute>
-            }
-          />
-          
-          <Route path="/speed-congruency/instructions" element={<SpeedCongruencyInstructions />} />
-          <Route
-            path="/speed-congruency"
-            element={
-              <ProtectedRoute role="participant">
-                <SpeedCongruencyTest />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Layout>
+        </Route>
+
+        <Route
+          path="/researcher/dashboard"
+          element={
+            <ProtectedRoute role="researcher">
+              <ResearcherDashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/screening/:step" element={<ScreeningFlow />} />
+        <Route path="/screening/exit/:code" element={<ScreeningExit />} />
+
+        <Route
+          path="/color/number"
+          element={
+            <ProtectedRoute role="participant">
+              <ColorNumberTest />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/color/letter"
+          element={
+            <ProtectedRoute role="participant">
+              <ColorLetterTest />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/color/word"
+          element={
+            <ProtectedRoute role="participant">
+              <ColorWordTest />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/speed-congruency"
+          element={
+            <ProtectedRoute role="participant">
+              <SpeedCongruencyTest />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
     </AuthProvider>
   )
 }

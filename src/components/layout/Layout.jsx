@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-export default function Layout({ children }) {
+export default function Layout() {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
@@ -11,9 +11,7 @@ export default function Layout({ children }) {
   };
 
   return (
-    <div
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
-    >
+    <div>
       <header className="topbar">
         <div className="topbar-content">
           <Link to="/" className="brand">
@@ -57,7 +55,7 @@ export default function Layout({ children }) {
       </header>
 
       <main className="container">
-        {children}
+        <Outlet />
       </main>
 
       <footer>
