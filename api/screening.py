@@ -9,7 +9,7 @@ from models import (
 )
 
 # Expose this Blueprint as `api_screening` for app.py to import
-bp = Blueprint("api_screening", __name__, url_prefix="/api/screening")
+bp = Blueprint("screening", __name__, url_prefix="/api/screening")
 
 
 # ---------------------------

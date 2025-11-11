@@ -14,7 +14,7 @@ from models import db, Participant, Researcher, Test, TestResult, ScreeningRespo
 # -----------------------------
 # Screening API blueprint (expects views/api_screening.py to expose `bp`)
 # -----------------------------
-import views as screening_api
+import screening
 
 # Set instance path for Flask (where database will be stored)
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -47,7 +47,7 @@ with app.app_context():
     db.create_all()
 
 # Register blueprint
-app.register_blueprint(screening_api.bp)
+app.register_blueprint(screening.bp)
 
 # =====================================
 # AUTHENTICATION ENDPOINTS
