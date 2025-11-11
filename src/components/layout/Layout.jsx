@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Layout({ children }) {
   const { user, logout, isAuthenticated } = useAuth();
@@ -56,7 +56,7 @@ export default function Layout({ children }) {
         </div>
       </header>
 
-      <main className="container" style={{ flex: 1 }}>
+      <main className="container">
         {children}
       </main>
 
