@@ -32,6 +32,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/screening/:step" element={<ScreeningFlow />} />
+          <Route path="/screening/exit/:code" element={<ScreeningExit />} />
         </Route>
 
         <Route
@@ -42,9 +44,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-
-        <Route path="/screening/:step" element={<ScreeningFlow />} />
-        <Route path="/screening/exit/:code" element={<ScreeningExit />} />
 
         <Route
           path="/color/number"
