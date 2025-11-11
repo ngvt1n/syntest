@@ -5,6 +5,44 @@ It enables researchers to screen participants, administer perception tests, and 
 
 ---
 
+## ⚙️ Installation & Setup
+
+### **1. Clone the Repository**
+
+```bash
+git clone https://github.com/yourusername/syntest.git
+cd syntest
+```
+
+### 2. Backend Dependencies
+
+```bash
+# Go into the backend folder
+cd api
+# Create virtualenv
+python -m venv .venv
+# Activate the virtualenv, on Windows .venv\Scripts\activate.bat
+source .venv/bin/activate 
+pip install -r requirements.txt
+```
+
+### 3. Frontend Dependencies
+
+```bash
+cd src 
+npm install
+```
+
+### 4. Run it!
+```bash
+# To run the backend: 
+npm run api 
+# To run the front end 
+npm run dev
+```
+
+---
+
 ## 🚀 Features
 
 ### **Participant Experience**
@@ -56,32 +94,6 @@ It enables researchers to screen participants, administer perception tests, and 
 * All design and data collection methods adhere to ethical research standards for online cognitive studies.
 
 ---
-
-## ⚙️ Installation & Setup
-
-### **1. Clone the Repository**
-
-```bash
-git clone https://github.com/yourusername/syntest.git
-cd syntest
-```
-
-### **2. Install Dependencies**
-
-```bash
-pip install -r requirements.txt
-```
-
-### **3. Run the App**
-
-```bash
-python3 app.py
-```
-
-Visit [http://127.0.0.1:5000](http://127.0.0.1:5000) in your browser.
-
----
-
 
 ## 🧪 Future Development
 
