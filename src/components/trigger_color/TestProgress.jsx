@@ -1,5 +1,13 @@
-import '../../styles/app.css';
+import React from 'react';
 
+/**
+ * TestProgress - Displays current progress information during test
+ * 
+ * Responsibilities:
+ * - Shows current stimulus being tested
+ * - Displays trial number (1-3 for each stimulus)
+ * - Shows progress through current trial set
+ */
 export default function TestProgress({ 
   stimulus, 
   currentTrial, 
@@ -8,10 +16,15 @@ export default function TestProgress({
   totalItems 
 }) {
   return (
-    <div className="status" aria-live="polite">
-      <div>Item: <span>{stimulus || '—'}</span></div>
-      <div>Trial <span>{currentTrial}</span> / <span>{totalTrials}</span></div>
-      <div>Progress <span>{currentItem}/{totalItems}</span></div>
+    <div style={{ 
+      fontSize: "0.875rem", 
+      color: "#6b7280", 
+      display: "flex", 
+      gap: "1.5rem" 
+    }}>
+      <span>Item: <strong>{stimulus}</strong></span>
+      <span>Trial <strong>{currentTrial}</strong> / <strong>{totalTrials}</strong></span>
+      <span>Progress <strong>{currentItem}/{totalItems}</strong></span>
     </div>
   );
 }
