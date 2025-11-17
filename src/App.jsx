@@ -72,6 +72,15 @@ function App() {
         />
 
         <Route
+          path="/tests/color/speed-congruency/instructions"
+          element={
+            <ProtectedRoute role="participant">
+              <SpeedCongruencyInstructions />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/tests/color/speed-congruency"
           element={
             <ProtectedRoute role="participant">
@@ -79,6 +88,11 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* <Route
+          path="/tests/color/speed-congruency"
+          element={<SpeedCongruencyTest />}
+        /> */}
+        
       </Routes>
     </AuthProvider>
   )
