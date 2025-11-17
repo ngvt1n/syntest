@@ -1,68 +1,110 @@
-import { useEffect, useState } from 'react'
-import { dashboardService } from '../services/dashboard'
-import '../styles/dashboard.css'
+import { useEffect, useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import DashboardStatCard from "../components/dashboard/DashboardStatCard";
+import RecentTable from "../components/dashboard/RecentTable";
+import { dashboardService } from "../services/dashboard";
 
 export default function ResearcherDashboard() {
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [summary, setSummary] = useState(null);
+  const [recent, setRecent] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const dashboardData = await dashboardService.getResearcherDashboard()
-        setData(dashboardData)
-      } catch (error) {
-        console.error('Error fetching dashboard:', error)
-      } finally {
-        setLoading(false)
-      }
+    if (!authLoading && (!user || user.role !== "researcher")) {
+      navigate("/login");
+      return;
     }
-    fetchData()
-  }, [])
 
-  if (loading) {
-    return <div className="container">Loading...</div>
+    if (user && user.role === "researcher") {
+      loadData();
+    }
+  }, [user, authLoading, navigate]);
+
+  async function loadData() {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const data = await dashboardService.getResearcherDashboard();
+      
+      setSummary(data.summary);
+      setRecent(data.recent);
+    } catch (e) {
+      console.error("Failed to load dashboard", e);
+      setError(e.response?.data?.error || "Failed to load dashboard data");
+    } finally {
+      setLoading(false);
+    }
   }
 
-  if (!data) {
-    return <div className="container">Error loading dashboard</div>
+  if (authLoading || loading) {
+    return (
+      <div className="dashboard-loading">
+        <div className="dashboard-spinner"></div>
+        <p className="dashboard-loading-text">Loading dashboard...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-error">
+        <h2 className="dashboard-error-title">Error Loading Dashboard</h2>
+        <p className="dashboard-error-text">{error}</p>
+        <button onClick={loadData} className="dashboard-error-button">
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+  if (!summary || !recent) {
+    return <p>No data available</p>;
   }
 
   return (
-    <div className="container">
+    <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>Researcher Dashboard</h1>
-        <div className="user-info">
-          <div className="user-avatar">{data.user.name.charAt(0).toUpperCase()}</div>
-          <div>
-            <div style={{ fontWeight: 600 }}>{data.user.name}</div>
-            {data.user.institution && (
-              <div className="text-muted">{data.user.institution}</div>
-            )}
-          </div>
-        </div>
+        <h1 className="dashboard-title">Researcher Dashboard</h1>
+        <p className="dashboard-welcome">Welcome back, {user?.name}</p>
       </div>
 
-      <div className="stats-container">
-        <div className="stat-card">
-          <div className="stat-number">{data.total_participants}</div>
-          <div className="stat-label">Total Participants</div>
-        </div>
-        <div className="stat-card">
-          <div className="stat-number">{data.completed_tests}</div>
-          <div className="stat-label">Completed Tests</div>
-        </div>
+      {/* Summary Stats */}
+      <div className="dashboard-stats-grid">
+        <DashboardStatCard
+          label="Total Participants"
+          value={summary.total_participants}
+        />
+        <DashboardStatCard
+          label="Active Participants"
+          value={summary.active_participants}
+        />
+        <DashboardStatCard
+          label="Total Stimuli"
+          value={summary.total_stimuli}
+        />
+        <DashboardStatCard
+          label="Tests Completed"
+          value={summary.tests_completed}
+        />
       </div>
 
-      <div className="card">
-        <div className="card-header">
-          <h3 className="card-title">Research Overview</h3>
-        </div>
-        <div className="card-body">
-          <p>Welcome to the researcher dashboard. Here you can view aggregated participant data and analyze test results.</p>
-        </div>
-      </div>
+      {/* Recent Activity */}
+      <RecentTable
+        title="Recent Participants"
+        columns={["name", "email", "created_at"]}
+        rows={recent.participants}
+      />
+
+      <RecentTable
+        title="Recent Stimuli"
+        columns={["description", "family", "created_at"]}
+        rows={recent.stimuli}
+      />
     </div>
-  )
+  );
 }
-

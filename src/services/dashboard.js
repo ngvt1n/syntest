@@ -7,7 +7,15 @@ export const dashboardService = {
   },
 
   async getResearcherDashboard() {
-    const response = await api.get("/researcher/dashboard");
-    return response.data;
+    // Fetch both summary and recent data
+    const [summary, recent] = await Promise.all([
+      api.get("/researcher/dashboard/summary"),
+      api.get("/researcher/dashboard/recent"),
+    ]);
+
+    return {
+      summary: summary.data,
+      recent: recent.data,
+    };
   },
 };

@@ -33,6 +33,14 @@ function App() {
               </ProtectedRoute>
             }
           />
+           <Route
+          path="/researcher/dashboard"
+          element={
+            <ProtectedRoute role="researcher">
+              <ResearcherDashboard />
+            </ProtectedRoute>
+          }
+        />
           <Route path="/screening/:step" element={<ScreeningFlow />} />
           <Route path="/screening/exit/:code" element={<ScreeningExit />} />
           <Route
@@ -62,14 +70,6 @@ function App() {
           />
         </Route>
 
-        <Route
-          path="/researcher/dashboard"
-          element={
-            <ProtectedRoute role="researcher">
-              <ResearcherDashboard />
-            </ProtectedRoute>
-          }
-        />
 
         <Route
           path="/tests/color/speed-congruency"
