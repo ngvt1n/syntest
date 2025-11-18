@@ -109,3 +109,5 @@ htmlcov/
 *.tgz
 backup/
 .DS_Store
+backup-patches/
+
