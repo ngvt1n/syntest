@@ -19,26 +19,73 @@ cd syntest
 ```bash
 # Go into the backend folder
 cd api
-# Create virtualenv
+
+# Create virtualenv (recommended)
 python -m venv .venv
-# Activate the virtualenv, on Windows .venv\Scripts\activate.bat
-source .venv/bin/activate 
+
+# Activate the virtualenv
+# Windows:
+.venv\Scripts\activate
+# Mac/Linux:
+source .venv/bin/activate
+
+# Install Python dependencies
 pip install -r requirements.txt
+
+# Go back to project root
+cd ..
 ```
+
+**Note:** If you don't use a virtual environment, install globally: `pip install -r api/requirements.txt`
 
 ### 3. Frontend Dependencies
 
 ```bash
-cd src 
+# Make sure you're in the project root (not in api/)
 npm install
 ```
 
 ### 4. Run it!
+
+#### Option 1: Run everything together (recommended)
 ```bash
-# To run the backend: 
-npm run api 
-# To run the front end 
+npm start
+# or
+npm run dev:all
+```
+This will start both backend and frontend servers simultaneously.
+
+#### Option 2: Run servers separately
+```bash
+# Terminal 1 - Backend:
+npm run api
+# or
+npm run dev:backend
+
+# Alternative: If using virtual environment with Flask CLI:
+# Windows: cd api && .venv\Scripts\flask run --no-debugger
+# Mac/Linux: cd api && .venv/bin/flask run --no-debugger
+
+# Terminal 2 - Frontend:
 npm run dev
+# or  
+npm run dev:frontend
+```
+
+#### Option 3: Use the start script
+```bash
+# Windows:
+start.bat
+
+# Mac/Linux:
+chmod +x start.sh
+./start.sh
+```
+
+#### Initialize Database (if needed)
+If you get database errors, initialize the database first:
+```bash
+npm run init-db
 ```
 
 ---
