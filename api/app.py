@@ -31,7 +31,7 @@ os.makedirs(instance_path, exist_ok=True)
 # -----------------------------
 # Flask App Setup
 # -----------------------------
-app = Flask(__name__, instance_path=instance_path)
+app = Flask(__name__, instance_path=instance_path, static_folder='../dist', static_url_path='/')
 
 allowed_origins = [
     'http://localhost:5173',
@@ -237,11 +237,11 @@ def api_get_current_user():
 # =====================================
 @app.route('/')
 def index():
-    return jsonify({
-        'status': 'ok',
-        'message': 'SYNTEST API is running',
-        'version': '1.0.0'
-    })
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
 
 
 # =====================================
