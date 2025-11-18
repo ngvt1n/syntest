@@ -92,7 +92,6 @@ function App() {
           path="/tests/color/speed-congruency"
           element={<SpeedCongruencyTest />}
         /> */}
-        
       </Routes>
     </AuthProvider>
   )
