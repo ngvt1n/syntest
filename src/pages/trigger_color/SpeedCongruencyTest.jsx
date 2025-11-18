@@ -22,6 +22,7 @@ export default function SpeedCongruencyTest() {
   const [isLoadingTrial, setIsLoadingTrial] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [lastFailedPayload, setLastFailedPayload] = useState(null);
 
   // For reaction time (choices phase)
   const choiceStartRef = useRef(null);
@@ -122,38 +123,52 @@ export default function SpeedCongruencyTest() {
       ? performance.now() - choiceStartRef.current
       : null;
 
-    setIsSubmitting(true);
-    try {
-      // Find the full option so we can send more details if needed
-      const chosenOption =
-        currentTrial.options.find(o => o.id === selectedOptionId) || {};
+    // Build the payload up-front so we can retry or store it if submission fails
+    const chosenOption = currentTrial.options.find(o => o.id === selectedOptionId) || {};
 
-      await speedCongruencyService.submitTrial({
-        trialId: currentTrial.id,
-        trigger: currentTrial.trigger,
-        selectedOptionId,
-        selectedColor: {
-          r: chosenOption.r,
-          g: chosenOption.g,
-          b: chosenOption.b,
-          hex: chosenOption.color,
-        },
-        reactionTimeMs,
-        trialIndex,
-        stimulusId: currentTrial.stimulusId,
-        testDataId: currentTrial.testDataId,
-        // optional: pass expectedColor if backend wants it
-        expectedColor: currentTrial.expectedColor,
-      });
+    const payload = {
+      trialId: currentTrial.id,
+      trigger: currentTrial.trigger,
+      selectedOptionId,
+      selectedColor: {
+        r: chosenOption.r,
+        g: chosenOption.g,
+        b: chosenOption.b,
+        hex: chosenOption.color,
+      },
+      reactionTimeMs,
+      trialIndex,
+      stimulusId: currentTrial.stimulusId,
+      testDataId: currentTrial.testDataId,
+      expectedColor: currentTrial.expectedColor,
+    };
+
+    setIsSubmitting(true);
+    setErrorMessage('');
+    setLastFailedPayload(null);
+
+    let submitted = false;
+    try {
+      await speedCongruencyService.submitTrial(payload);
+      submitted = true;
     } catch (e) {
       console.error('Error submitting speed congruency trial:', e);
-      // You may want to surface a message, but still allow flow:
-      // setErrorMessage('There was a problem saving your answer.');
+      // Surface an actionable message and retain the payload for retry
+      setErrorMessage('There was a problem saving your answer. You can Retry or Skip this trial.');
+      setLastFailedPayload(payload);
     } finally {
       setIsSubmitting(false);
     }
 
+    // If submission failed, DO NOT advance automatically — wait for user action
+    if (!submitted) return;
+
     // Move to next trial or finish
+    advanceToNext();
+  };
+
+  // Helper to advance to next trial (shared by successful submit and retry flow)
+  const advanceToNext = () => {
     const nextIndex = trialIndex + 1;
     if (nextIndex < totalTrials) {
       setTrialIndex(nextIndex);
@@ -163,6 +178,45 @@ export default function SpeedCongruencyTest() {
     } else {
       setPhase('done');
     }
+  };
+
+  // Retry the last failed payload (if any)
+  const handleRetry = async () => {
+    if (!lastFailedPayload) return;
+    setIsSubmitting(true);
+    setErrorMessage('');
+    try {
+      await speedCongruencyService.submitTrial(lastFailedPayload);
+      setLastFailedPayload(null);
+      // advance now that submission succeeded
+      advanceToNext();
+    } catch (e) {
+      console.error('Retry failed:', e);
+      setErrorMessage('Retry failed. You can try again or Skip this trial.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Skip the failed submission: record it to localStorage for later syncing and advance
+  const handleSkip = () => {
+    if (!lastFailedPayload) {
+      advanceToNext();
+      return;
+    }
+
+    try {
+      const key = 'speedCongruency_pending';
+      const existing = JSON.parse(localStorage.getItem(key) || '[]');
+      existing.push(lastFailedPayload);
+      localStorage.setItem(key, JSON.stringify(existing));
+    } catch (e) {
+      console.error('Failed to save pending submission locally:', e);
+    }
+
+    setLastFailedPayload(null);
+    setErrorMessage('Saved locally and skipped this trial.');
+    advanceToNext();
   };
 
   // =====================================
@@ -385,6 +439,23 @@ export default function SpeedCongruencyTest() {
           <Button onClick={handleNextTrial} disabled={isSubmitting}>
             {trialIndex + 1 === totalTrials ? 'Finish' : 'Next'}
           </Button>
+        )}
+
+        {/* Error / retry UI for failed submissions */}
+        {errorMessage && (
+          <div style={{ marginTop: '12px' }}>
+            <p style={{ color: '#b00020' }}>{errorMessage}</p>
+            {lastFailedPayload && (
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
+                <Button onClick={handleRetry} disabled={isSubmitting}>
+                  Retry
+                </Button>
+                <Button onClick={handleSkip} disabled={isSubmitting}>
+                  Skip
+                </Button>
+              </div>
+            )}
+          </div>
         )}
 
         <p style={{ marginTop: '12px', fontSize: '0.9rem', color: '#777' }}>

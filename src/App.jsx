@@ -63,8 +63,7 @@ function App() {
           
           {/* Music/Sound to Color test */}
           <Route path="/tests/color/music" element={<ColorMusicTest />} />
-          <Route path="/speed-congruency/instructions" element={<SpeedCongruencyInstructions />} />
-        </Route>
+          </Route>
 
         <Route
           path="/researcher/dashboard"
@@ -75,14 +74,6 @@ function App() {
           }
         />
 
-        {/* <Route
-          path="/tests/color/speed-congruency/instructions"
-          element={
-            <ProtectedRoute role="participant">
-              <SpeedCongruencyInstructions />
-            </ProtectedRoute>
-          }
-        /> */}
 
         <Route
           path="/tests/color/speed-congruency"
@@ -96,6 +87,8 @@ function App() {
           path="/tests/color/speed-congruency"
           element={<SpeedCongruencyTest />}
         /> */}
+
+      
         
       </Routes>
     </AuthProvider>
