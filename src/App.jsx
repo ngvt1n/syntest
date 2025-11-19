@@ -60,7 +60,7 @@ function App() {
               // </ProtectedRoute>
             }
           />
-          
+
           {/* Music/Sound to Color test */}
           <Route path="/tests/color/music" element={<ColorMusicTest />} />
           </Route>
@@ -74,7 +74,6 @@ function App() {
           }
         />
 
-
         <Route
           path="/tests/color/speed-congruency"
           element={
@@ -83,11 +82,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        {/* <Route
-          path="/tests/color/speed-congruency"
-          element={<SpeedCongruencyTest />}
-        /> */}
-
       
         
       </Routes>
