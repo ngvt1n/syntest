@@ -9,6 +9,7 @@ Icon?
 ._*
 .Spotlight-V100
 .Trashes
+
 ehthumbs.db
 Thumbs.db
 
@@ -101,3 +102,13 @@ htmlcov/
 
 # OS specific
 *.lnk
+# Local/backups
+*.bak
+*~
+*.swp
+*.tmp
+*.tgz
+backup/
+.DS_Store
+backup-patches/
+

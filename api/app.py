@@ -5,6 +5,7 @@ from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
+
 # -----------------------------
 # Models (must exist in models.py)
 # -----------------------------
@@ -21,7 +22,8 @@ from models import (
 # Screening API blueprint (expects views/api_screening.py to expose `bp`)
 # -----------------------------
 from screening import bp as screening
-from dashboard import bp as dashboard  # participant dashboard
+from dashboard import bp as dashboard
+from speedcongruency import bp as speedcongruency_bp
 from researcher_dashboard import researcher_bp
 
 # Set instance path for Flask (where database will be stored)
@@ -86,6 +88,7 @@ except Exception as e:
 # Register blueprints
 app.register_blueprint(screening)
 app.register_blueprint(dashboard)
+app.register_blueprint(speedcongruency_bp)
 app.register_blueprint(researcher_bp)
 
 # =====================================
