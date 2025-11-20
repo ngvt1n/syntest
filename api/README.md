@@ -18,6 +18,7 @@ The server will run on `http://localhost:5000`
 
 ## Project Structure
 
+_to-be-deprecated_
 - `app.py` - Main Flask application (API-only, no templates)
 - `models.py` - SQLAlchemy database models
 - `views.py` - API blueprints (screening endpoints)
@@ -29,13 +30,7 @@ The server will run on `http://localhost:5000`
 - `speed_congruencydev.py` - Development utilities (if needed)
 
 ## API Endpoints
-
-- `/api/auth/login` - POST - User login
-- `/api/auth/signup` - POST - User registration
-- `/api/auth/logout` - POST - User logout
-- `/api/auth/me` - GET - Get current user
-- `/api/screening/*` - Screening flow endpoints
-- `/api/color/*` - Color test endpoints
-- `/api/speed-congruency/*` - Speed congruency test endpoints
-- `/api/participant/dashboard` - GET - Participant dashboard data
-- `/api/researcher/dashboard` - GET - Researcher dashboard data
+ 
+```
+flask routes
+```
