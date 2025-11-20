@@ -1,1 +1,2 @@
-web: gunicorn --pythonpath api app:app; npm run build
+release: python api/init_db.py
+web: gunicorn --pythonpath api app:app
