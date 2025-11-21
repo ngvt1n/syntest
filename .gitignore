@@ -30,6 +30,11 @@ __pycache__/
 *.egg-info/
 .eggs/
 
+# ML Module - Generated Files (local testing only)
+api/ml/visualizations/
+api/ml/models/*.pkl
+api/ml/models/*.npz
+
 # Virtual Environments
 .venv/
 venv/
